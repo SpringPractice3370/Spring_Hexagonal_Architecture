@@ -1,17 +1,20 @@
 package com.example.hexagonalarchitecture.board.application.service
 
 import com.example.hexagonalarchitecture.board.adapter.`in`.web.BoardResponse
+import com.example.hexagonalarchitecture.board.application.port.`in`.BoardCommand
 import com.example.hexagonalarchitecture.board.application.port.`in`.BoardUseCase
-import com.example.hexagonalarchitecture.board.application.port.out.BoardPort
+import com.example.hexagonalarchitecture.board.application.port.out.BoardStateCommand
+import com.example.hexagonalarchitecture.board.application.port.out.BoardStatePort
+import com.example.hexagonalarchitecture.board.domain.Board
 import org.springframework.stereotype.Service
 
 @Service
 class BoardService(
-    private val boardPort: BoardPort
+    private val boardStatePort: BoardStatePort
 ): BoardUseCase {
-    override fun getBoardByTitle(title: String): BoardResponse {
-        val board = boardPort.findByTitle(title)
-            ?: throw IllegalArgumentException("게시판을 찾을 수 없습니다. title: $title")
+    override fun getBoardByTitle(command: BoardCommand): BoardResponse {
+        val board = boardStatePort.findByTitle(BoardStateCommand(title = command.title))
+            ?: throw IllegalArgumentException("게시판을 찾을 수 없습니다. title: ${command.title}")
         return BoardResponse(
             id = board.id,
             title = board.title,
