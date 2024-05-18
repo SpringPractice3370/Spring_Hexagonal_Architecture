@@ -8,33 +8,60 @@ plugins {
 	kotlin("plugin.jpa") version "1.9.23"
 }
 
-group = "com.example"
-version = "0.0.1-SNAPSHOT"
-
 java {
-	sourceCompatibility = JavaVersion.VERSION_20
+	sourceCompatibility = JavaVersion.VERSION_17
 }
 
-repositories {
-	mavenCentral()
-}
-
-dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("mysql:mysql-connector-java:8.0.32")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-}
-
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs += "-Xjsr305=strict"
-		jvmTarget = "20"
+configurations {
+	compileOnly {
+		extendsFrom(configurations.annotationProcessor.get())
 	}
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
+allprojects {
+	group = "hexagonal-sample-server"
+	version = "1.0.0"
+
+	repositories {
+		mavenCentral()
+	}
+}
+
+subprojects {
+	apply(plugin = "java")
+
+	apply(plugin = "kotlin")
+	apply(plugin = "kotlin-spring")
+	apply(plugin = "kotlin-kapt")
+
+	apply(plugin = "org.springframework.boot")
+	apply(plugin = "io.spring.dependency-management")
+	apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+
+	dependencies {
+		implementation("org.springframework.boot:spring-boot-starter")
+		implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+		implementation("org.springframework.boot:spring-boot-starter-web")
+		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+		implementation("org.jetbrains.kotlin:kotlin-reflect")
+		implementation("mysql:mysql-connector-java:8.0.32")
+		testImplementation("org.springframework.boot:spring-boot-starter-test")
+	}
+
+	tasks.withType<KotlinCompile> {
+		kotlinOptions {
+			freeCompilerArgs += "-Xjsr305=strict"
+			jvmTarget = "17"
+		}
+	}
+
+	tasks.withType<Test> {
+		useJUnitPlatform()
+	}
+
+	configurations {
+		compileOnly {
+			extendsFrom(configurations.annotationProcessor.get())
+		}
+	}
 }
