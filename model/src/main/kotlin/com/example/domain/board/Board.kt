@@ -4,5 +4,5 @@ data class Board(
     val id: Long,
     val title: String,
     val content: String,
-    val test: Sttring
+    val test: String
 )
