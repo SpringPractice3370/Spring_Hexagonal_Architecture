@@ -27,7 +27,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run tests and build
-        run: ./gradlew clean test bootJar
+        run: ./gradlew clean test :api:bootJar
 
       - name: Comment PR on success
         if: success()
